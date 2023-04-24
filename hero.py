@@ -8,7 +8,7 @@ class Hero():
         self.hero.setPos(pos)
         self.hero.reparentTo(render)
         #self.cameraBind()
-        #self.cameraUp()
+        self.cameraUp()
         self.accept_events()
 
     def cameraBind(self):
@@ -26,10 +26,6 @@ class Hero():
         self.cameraOn = False
 
 
-    def accept_events(self):
-        base.accept( 'с' , self.changeView)
-
-
     def changeView(self):
         if self.cameraOn:
             self.cameraUp()
@@ -38,13 +34,30 @@ class Hero():
 
 
     def accept_events(self):
-        base.accept('n', self.turn_left)
-        base.accept('n'+'-repeat', self.turn_left)
-
+        base.accept('j', self.turn_left)
+        base.accept('j'+'-repeat', self.turn_left)
+        base.accept('c' , self.changeView)
+        base.accept('l', self.turn_right)
+        base.accept('l'+'-repeat', self.turn_right)
+        base.accept('i', self.turn_up)
+        base.accept('i'+'-repeat', self.turn_up)
+        base.accept('k', self.turn_down)
+        base.accept('k'+'-repeat', self.turn_down)
+        #movement
+        base.accept('w', self.forward)
+        base.accept('w'+'-repeat', self.forward)
 
     def turn_left(self):
         self.hero.setH((self.hero.getH() + 5) % 360)
 
+    def turn_right(self):
+        self.hero.setH((self.hero.getH() - 5) % 360)
+
+    def turn_up(self):
+        self.hero.setP((self.hero.getP() - 5) % 360)
+
+    def turn_down(self):
+        self.hero.setP((self.hero.getP() + 5) % 360)
 
     def just_move(self, angle):
         pos  = self.look_at(angle)
@@ -56,16 +69,18 @@ class Hero():
 
     def move_to(self, angle):
         if self.mode:
-            self.just_move()
+            self.just_move(angle)
         else:
             self.try_move()
 
-    def look_at(self, angle):
-        from_x = round(self.hero.getX())
-        from_y = round(self.hero.getY())
-        from_z = round(self.hero.getZ())
-        dx, dy  = self.hero.check_dir(self, angle)
-        return from_x + dx,from_y + dy, from_z
+    """def check_dir(self, angle):
+        # Your implementation of check_dir method here
+        # Calculate dx and dy based on the input angle
+        dx = math.cos(math.radians(angle))
+        dy = math.sin(math.radians(angle))
+        return dx, dy"""
+
+
 
     def check_dir(self, angle):
         if angle >= 0 and angle <= 20:
@@ -87,13 +102,20 @@ class Hero():
         else:
             return 0, -1
 
+    def look_at(self, angle):
+        from_x = round(self.hero.getX())
+        from_y = round(self.hero.getY())
+        from_z = round(self.hero.getZ())
+        dx, dy  = self.check_dir(angle)
+        return from_x + dx,from_y + dy, from_z
+
 
     def back(self):
         angle =(self.hero.getH()+180) % 360
         self.move_to(angle)
 
     def forward(self):
-        angle =self.hero.getH() % 360
+        angle = self.hero.getH() % 360
         self.move_to(angle)
 
     def left(self):
