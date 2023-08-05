@@ -3,7 +3,8 @@ created game app
 WITH CHARACTER
 
 
-
+###PIP INSTALL
+"https://pypi.org/project/Panda3D/"
 
 
 HERE IS LINK TO DOCUMENTATION
